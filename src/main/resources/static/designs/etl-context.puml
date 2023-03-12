@@ -1,0 +1,28 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+!include DEVICONS/angular.puml
+!include DEVICONS/java.puml
+!include DEVICONS/msql_server.puml
+!include FONTAWESOME/adversal.puml
+!include FONTAWESOME/users.puml
+!include FONTAWESOME/bezier_curve.puml
+!include FONTAWESOME/buffer.puml
+!include FONTAWESOME/folder.puml
+
+System_Ext(source, "Data source", $sprite="robot")
+System_Boundary(c1, "Data ingestion") {
+Container(landingZ, "Landing zone", "Folder", "File system", $sprite="folder")
+Container(processor, "Process", "Job", "Batch processing module", $sprite="java")
+Container(arch, "Archive zone", "File system", "ETL system", $sprite="folder")
+Container(error, "Error zone", "File system", "ETL system", $sprite="folder")
+ContainerDb(db, "Database", "Long-term storage", "Data warehouse", $sprite="msql_server")
+}
+Rel_R(source, landingZ, "FTP", "save")
+Rel_L(processor,landingZ, "Check file", "load")
+Rel(processor, arch, "save", "stream")
+Rel(processor, error, "save", "stream")
+Rel(processor, db, "save", "JDBC connector")
+@enduml

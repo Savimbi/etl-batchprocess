@@ -1,0 +1,68 @@
+@startuml
+
+' hide the spot
+hide circle
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+entity "DEVICE_EVENT_LOG_FACT" as device_event {
+  *eventLogId : number <<PK>>
+  *deviceId : number <<FK1>>
+  *eventId : number <<FK2>>
+  *hourId : number <<FK3>>
+  *monthId : number <<FK4>>
+  *quarterId : number <<FK5>>
+  --
+  eventTMS : TimeStamp
+  closureStatus : Text
+  closureDuration : Time
+}
+
+entity "HOUR_DIMENSION" as hour {
+  *hourId : number <<PK>>
+  --
+  hour_of_day : number
+  am_or_pm : text
+}
+
+entity "MONTH_DIMENSION" as month {
+  *monthId : number <<PK>>
+  --
+  name : Text
+  monthCd : Text
+  number_of_days : number
+}
+entity "QUARTER_DIMENSION" as quarter {
+  *quarterId : number <<PK>>
+  --
+  name : Text
+  quarterCd : Text
+}
+entity "EVENT_DIMENSION" as event {
+  *eventId : number <<PK>>
+  --
+  eventCD : Text
+  eventName : Text
+  eventDsc : Text
+  eventType : Text
+}
+entity "DEVICE_DIMENSION" as device {
+  *deviceId : number <<PK>>
+  --
+  deviceSN : Text
+  deviceName : Text
+  deviceDsc : Text
+  deviceType : Text
+  mfDate : Date
+  saleDate : Date
+  inWarranty : Date
+}
+
+hour ||..{ device_event
+quarter ||..{ device_event
+month ||..{ device_event
+event ||..{ device_event
+device ||..{ device_event
+
+@enduml

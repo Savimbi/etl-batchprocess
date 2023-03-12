@@ -1,0 +1,20 @@
+@startuml
+!include https://raw.githubusercontent.com/johthor/DomainStory-PlantUML/main/domainStory.puml
+'!include ../domainStory.puml
+
+Document(storage, Data Warehouse(db))
+
+Boundary(batch-pro, Batch processing) {
+    System(processor, Ingestion process, )
+    Folder(input, Input folder, )
+    Folder(outputArch, Archive folder, )
+    Folder(outputError, Error folder, )
+
+    activity(1, processor, check for new file, Info: exist, in,input)
+    activity(2, input, start job,processor)
+    activity(3, processor, check status of job,Info: succeed, outputArch)
+    activity(4, processor, save file,Info: failed, outputError)
+    activity(5, processor, save data, storage)
+
+}
+@enduml
